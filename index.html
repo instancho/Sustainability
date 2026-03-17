@@ -4,10 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sustainability at The One</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
   <style>
+    @font-face {
+      font-family: 'Blender Pro';
+      src: url('fonts/BlenderPro-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Blender Pro';
+      src: url('fonts/BlenderPro-Book.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     html { overflow-x: hidden; }
@@ -15,7 +28,7 @@
     body {
       background: #0a0a0a;
       color: #fff;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Blender Pro', sans-serif;
       overflow-x: hidden;
     }
 
@@ -35,7 +48,7 @@
     .loader.done { opacity: 0; pointer-events: none; }
 
     .loader-text {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: 'Blender Pro', sans-serif;
       font-size: 1.4rem;
       letter-spacing: 0.15em;
       color: rgba(255,255,255,0.7);
@@ -122,9 +135,9 @@
     }
 
     .text-section h2 {
-      font-family: 'Bebas Neue', 'Arial Black', sans-serif;
-      font-weight: 400;
-      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-family: 'Blender Pro', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.75rem, 5.6vw, 4.2rem);
       letter-spacing: 0.05em;
       line-height: 1.05;
       margin-bottom: 1.2rem;
@@ -133,9 +146,9 @@
     }
 
     .text-section p {
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      font-size: clamp(0.95rem, 2vw, 1.25rem);
+      font-family: 'Blender Pro', sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.09rem, 2.3vw, 1.44rem);
       line-height: 1.7;
       max-width: 700px;
       color: rgba(255, 255, 255, 0.85);
@@ -144,13 +157,13 @@
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .text-section { padding: 1.5rem; }
-      .text-section h2 { font-size: clamp(2rem, 10vw, 3.5rem); margin-bottom: 1rem; }
-      .text-section p { font-size: clamp(0.85rem, 3.5vw, 1.05rem); max-width: 90%; line-height: 1.6; }
+      .text-section h2 { font-size: clamp(1.4rem, 7vw, 2.45rem); margin-bottom: 1rem; }
+      .text-section p { font-size: clamp(0.98rem, 4vw, 1.21rem); max-width: 90%; line-height: 1.6; }
     }
 
     @media (max-width: 480px) {
-      .text-section h2 { font-size: clamp(1.8rem, 11vw, 2.8rem); }
-      .text-section p { font-size: 0.9rem; max-width: 95%; }
+      .text-section h2 { font-size: clamp(1.26rem, 7.7vw, 1.96rem); }
+      .text-section p { font-size: 1.035rem; max-width: 95%; }
       .scroll-indicator .dot { width: 8px; height: 8px; }
     }
   </style>
