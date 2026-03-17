@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sustainability at The One</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { overflow-x: hidden; }
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Loading Screen ── */
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease;
+    }
+
+    .loader.done { opacity: 0; pointer-events: none; }
+
+    .loader-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 1.5rem;
+    }
+
+    .loader-bar-track {
+      width: 200px;
+      height: 3px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loader-bar {
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      border-radius: 2px;
+      transition: width 0.15s linear;
+    }
+
+    /* ── Scroll Spacer ── */
+    .scroll-spacer {
+      position: relative;
+      height: 362vh;
+    }
+
+    /* ── Fixed Canvas Background ── */
+    .canvas-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .canvas-fixed canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+    }
+
+    /* ── Dark Overlay ── */
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── Text Layer ── */
+    .text-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .text-section {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+
+    .text-section h2 {
+      font-family: 'Bebas Neue', 'Arial Black', sans-serif;
+      font-weight: 400;
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      letter-spacing: 0.05em;
+      line-height: 1.05;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .text-section p {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: clamp(0.95rem, 2vw, 1.25rem);
+      line-height: 1.7;
+      max-width: 700px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .text-section { padding: 1.5rem; }
+      .text-section h2 { font-size: clamp(2rem, 10vw, 3.5rem); margin-bottom: 1rem; }
+      .text-section p { font-size: clamp(0.85rem, 3.5vw, 1.05rem); max-width: 90%; line-height: 1.6; }
+    }
+
+    @media (max-width: 480px) {
+      .text-section h2 { font-size: clamp(1.8rem, 11vw, 2.8rem); }
+      .text-section p { font-size: 0.9rem; max-width: 95%; }
+      .scroll-indicator .dot { width: 8px; height: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div class="loader" id="loader">
+    <div class="loader-text">LOADING</div>
+    <div class="loader-bar-track"><div class="loader-bar" id="loaderBar"></div></div>
+  </div>
+
+  <!-- Fixed canvas background -->
+  <div class="canvas-fixed">
+    <canvas id="frameCanvas"></canvas>
+  </div>
+
+  <div class="video-overlay"></div>
+
+  <!-- Fixed text overlay -->
+  <div class="text-layer">
+    <div class="text-section" data-index="0">
+      <h2>Sustainability at The One</h2>
+      <p>Sustainability is not a checkbox for us. It is a responsibility – to people, to resources, and to the future we are shaping.</p>
+    </div>
+    <div class="text-section" data-index="1">
+      <h2>Built to Last</h2>
+      <p>We design schools, spaces, technology, and systems that are made to endure. Longevity reduces waste, strong foundations reduce repetition, and thoughtful planning prevents excess. We build once. We build right.</p>
+    </div>
+    <div class="text-section" data-index="2">
+      <h2>People First, Always</h2>
+      <p>True sustainability begins with human well-being – education, nourishment, dignity of work, and emotional safety. Before scale. Before profit. Always people.</p>
+    </div>
+    <div class="text-section" data-index="3">
+      <h2>Conscious Use of Resources</h2>
+      <p>We use what is needed – and we use it wisely. Better materials, efficient systems, and responsible construction. No unnecessary waste. No shortcuts.</p>
+    </div>
+  </div>
+
+  <!-- Scroll spacer -->
+  <div class="scroll-spacer"></div>
+
+
+  <script>
+    // ── Config ──
+    const TOTAL_FRAMES = 90;
+    const FRAME_PATH = 'frames/frame_';
+    const SCROLL_LERP = 0.12;  // scroll smoothing (higher = more responsive, lower = smoother glide)
+    const TEXT_LERP = 0.08;
+
+    // ── Elements ──
+    const canvas = document.getElementById('frameCanvas');
+    const ctx = canvas.getContext('2d');
+    const sections = document.querySelectorAll('.text-section');
+    const loader = document.getElementById('loader');
+    const loaderBar = document.getElementById('loaderBar');
+
+    // ── State ──
+    const images = new Array(TOTAL_FRAMES);
+    let loadedCount = 0;
+    let ready = false;
+    let currentActive = -1;
+
+    let smoothProgress = 0;
+    let lastBlendKey = '';
+    let drawW = 0, drawH = 0, dpr = 1;
+
+    // Offscreen buffer for flicker-free compositing
+    let offscreen, offCtx;
+
+    const state = { o: [0,0,0,0], t: [30,30,30,30] };
+    const target = { o: [0,0,0,0], t: [30,30,30,30] };
+
+    // ── Preload all WebP frames ──
+    function preloadFrames() {
+      return new Promise((resolve) => {
+        for (let i = 0; i < TOTAL_FRAMES; i++) {
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = `${FRAME_PATH}${String(i).padStart(3, '0')}.webp`;
+          img.onload = img.onerror = () => {
+            loadedCount++;
+            loaderBar.style.width = (loadedCount / TOTAL_FRAMES * 100) + '%';
+            if (loadedCount === TOTAL_FRAMES) resolve();
+          };
+          images[i] = img;
+        }
+      });
+    }
+
+    // ── Draw blended frame (composited on offscreen canvas, then copied) ──
+    function drawBlendedFrame(fractionalIndex) {
+      const maxIdx = TOTAL_FRAMES - 1;
+      const clamped = Math.max(0, Math.min(fractionalIndex, maxIdx));
+      const lo = Math.floor(clamped);
+      const hi = Math.min(lo + 1, maxIdx);
+      const blend = clamped - lo;
+
+      const blendQ = Math.round(blend * 50); // quantize to 50 steps
+      const key = lo * 51 + blendQ;          // single number key (faster compare)
+      if (key === lastBlendKey) return;
+      lastBlendKey = key;
+
+      const w = drawW * dpr;
+      const h = drawH * dpr;
+
+      // Snap to nearest frame outside blend zone
+      if (lo === hi || blend < 0.4) {
+        offCtx.globalAlpha = 1;
+        offCtx.drawImage(images[lo], 0, 0, w, h);
+      } else if (blend > 0.6) {
+        offCtx.globalAlpha = 1;
+        offCtx.drawImage(images[hi], 0, 0, w, h);
+      } else {
+        // Gentle blend in 0.4–0.6 zone
+        const softBlend = (blend - 0.4) / 0.2;
+        offCtx.globalAlpha = 1;
+        offCtx.drawImage(images[lo], 0, 0, w, h);
+        offCtx.globalAlpha = softBlend;
+        offCtx.drawImage(images[hi], 0, 0, w, h);
+        offCtx.globalAlpha = 1;
+      }
+
+      // Single
+      ctx.drawImage(offscreen, 0, 0);
+    }
+
+    // ── Cover-fit canvas to viewport ──
+    function resizeCanvas() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const img = images[0];
+      if (!img || !img.naturalWidth) return;
+
+      const imgAspect = img.naturalWidth / img.naturalHeight;
+      const winAspect = vw / vh;
+
+      if (winAspect > imgAspect) {
+        drawW = vw;
+        drawH = vw / imgAspect;
+      } else {
+        drawH = vh;
+        drawW = vh * imgAspect;
+      }
+
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const pw = drawW * dpr;
+      const ph = drawH * dpr;
+
+      canvas.width = pw;
+      canvas.height = ph;
+      canvas.style.width = drawW + 'px';
+      canvas.style.height = drawH + 'px';
+      canvas.style.left = ((vw - drawW) / 2) + 'px';
+      canvas.style.top = ((vh - drawH) / 2) + 'px';
+
+      // Resize offscreen buffer to match
+      offscreen.width = pw;
+      offscreen.height = ph;
+      offCtx.imageSmoothingEnabled = true;
+      offCtx.imageSmoothingQuality = 'high';
+
+      // Force redraw
+      lastBlendKey = '';
+      if (ready) drawBlendedFrame(smoothProgress * (TOTAL_FRAMES - 1));
+    }
+
+    // ── Raw scroll progress (0–1) ──
+    function getRawProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    }
+
+    // ── Text targets from progress ──
+    function updateTargets(progress) {
+      const fadeZone = 0.06;
+      let newActive = -1;
+
+      for (let i = 0; i < 4; i++) {
+        const start = i * 0.25;
+        const end = start + 0.25;
+        let o = 0, ty = 30;
+
+        if (progress >= start && progress <= end) {
+          if (progress < start + fadeZone) {
+            const t = (progress - start) / fadeZone;
+            o = t;
+            ty = 30 * (1 - t);
+          } else if (progress > end - fadeZone) {
+            const t = (progress - (end - fadeZone)) / fadeZone;
+            o = 1 - t;
+            ty = -20 * t;
+          } else {
+            o = 1;
+            ty = 0;
+          }
+          if (o > 0.5) newActive = i;
+        }
+
+        target.o[i] = o;
+        target.t[i] = ty;
+      }
+
+      currentActive = newActive;
+    }
+
+    // ── Main render loop ──
+    function tick() {
+      if (!ready) { requestAnimationFrame(tick); return; }
+
+      // 1. Smooth scroll position
+      const rawProgress = getRawProgress();
+      const delta = rawProgress - smoothProgress;
+
+      if (Math.abs(delta) < 0.00005) {
+        smoothProgress = rawProgress;
+      } else {
+        smoothProgress += delta * SCROLL_LERP;
+      }
+
+      // 2. Draw frame
+      drawBlendedFrame(smoothProgress * (TOTAL_FRAMES - 1));
+
+      // 3. Text
+      updateTargets(smoothProgress);
+
+      for (let i = 0; i < 4; i++) {
+        state.o[i] += (target.o[i] - state.o[i]) * TEXT_LERP;
+        state.t[i] += (target.t[i] - state.t[i]) * TEXT_LERP;
+
+        if (Math.abs(target.o[i] - state.o[i]) < 0.002) state.o[i] = target.o[i];
+        if (Math.abs(target.t[i] - state.t[i]) < 0.05) state.t[i] = target.t[i];
+
+        sections[i].style.opacity = state.o[i];
+        sections[i].style.transform = `translateY(${state.t[i]}px)`;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // ── Init ──
+    (async () => {
+      // Create offscreen buffer
+      offscreen = document.createElement('canvas');
+      offCtx = offscreen.getContext('2d');
+
+      await preloadFrames();
+      ready = true;
+      smoothProgress = getRawProgress();
+      resizeCanvas();
+      drawBlendedFrame(0);
+      updateTargets(0);
+
+      loader.classList.add('done');
+      setTimeout(() => loader.style.display = 'none', 700);
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
