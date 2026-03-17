@@ -271,15 +271,15 @@
       const h = drawH * dpr;
 
       // Snap to nearest frame outside blend zone
-      if (lo === hi || blend < 0.15) {
+      if (lo === hi || blend < 0.25) {
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[lo], 0, 0, w, h);
-      } else if (blend > 0.85) {
+      } else if (blend > 0.75) {
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[hi], 0, 0, w, h);
       } else {
-        // Wider blend zone (0.15–0.85) for smoother transitions with fewer frames
-        const softBlend = (blend - 0.15) / 0.7;
+        // Moderate blend zone (0.25–0.75)
+        const softBlend = (blend - 0.25) / 0.5;
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[lo], 0, 0, w, h);
         offCtx.globalAlpha = softBlend;
