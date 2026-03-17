@@ -74,7 +74,7 @@
     /* ── Scroll Spacer ── */
     .scroll-spacer {
       position: relative;
-      height: 362vh;
+      height: 200vh;
     }
 
     /* ── Fixed Canvas Background ── */
@@ -102,7 +102,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.1);
       pointer-events: none;
       z-index: 2;
     }
@@ -209,9 +209,9 @@
 
   <script>
     // ── Config ──
-    const TOTAL_FRAMES = 75;
+    const TOTAL_FRAMES = 50;
     const FRAME_PATH = 'frames/frame_';
-    const SCROLL_LERP = 0.12;  // scroll smoothing (higher = more responsive, lower = smoother glide)
+    const SCROLL_LERP = 0.09;  // scroll smoothing (higher = more responsive, lower = smoother glide)
     const TEXT_LERP = 0.08;
 
     // ── Elements ──
@@ -271,15 +271,15 @@
       const h = drawH * dpr;
 
       // Snap to nearest frame outside blend zone
-      if (lo === hi || blend < 0.4) {
+      if (lo === hi || blend < 0.15) {
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[lo], 0, 0, w, h);
-      } else if (blend > 0.6) {
+      } else if (blend > 0.85) {
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[hi], 0, 0, w, h);
       } else {
-        // Gentle blend in 0.4–0.6 zone
-        const softBlend = (blend - 0.4) / 0.2;
+        // Wider blend zone (0.15–0.85) for smoother transitions with fewer frames
+        const softBlend = (blend - 0.15) / 0.7;
         offCtx.globalAlpha = 1;
         offCtx.drawImage(images[lo], 0, 0, w, h);
         offCtx.globalAlpha = softBlend;
