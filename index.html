@@ -167,6 +167,7 @@
       .scroll-indicator .dot { width: 8px; height: 8px; }
     }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.19/dist/lenis.css">
 </head>
 <body>
 
@@ -207,11 +208,11 @@
   <div class="scroll-spacer"></div>
 
 
+  <script src="https://unpkg.com/lenis@1.3.19/dist/lenis.min.js"></script>
   <script>
     // ── Config ──
     const TOTAL_FRAMES = 50;
     const FRAME_PATH = 'frames/frame_';
-    const SCROLL_LERP = 0.09;  // scroll smoothing (higher = more responsive, lower = smoother glide)
     const TEXT_LERP = 0.08;
 
     // ── Elements ──
@@ -236,6 +237,13 @@
 
     const state = { o: [0,0,0,0], t: [30,30,30,30] };
     const target = { o: [0,0,0,0], t: [30,30,30,30] };
+
+    // ── Lenis smooth scroll ──
+    const lenis = new Lenis({
+      lerp: 0.09,
+      smoothWheel: true,
+      syncTouch: true,
+    });
 
     // ── Preload all WebP frames ──
     function preloadFrames() {
@@ -331,12 +339,6 @@
       if (ready) drawBlendedFrame(smoothProgress * (TOTAL_FRAMES - 1));
     }
 
-    // ── Raw scroll progress (0–1) ──
-    function getRawProgress() {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      return max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
-    }
-
     // ── Text targets from progress ──
     function updateTargets(progress) {
       const fadeZone = 0.06;
@@ -371,18 +373,12 @@
     }
 
     // ── Main render loop ──
-    function tick() {
+    function tick(time) {
       if (!ready) { requestAnimationFrame(tick); return; }
 
-      // 1. Smooth scroll position
-      const rawProgress = getRawProgress();
-      const delta = rawProgress - smoothProgress;
-
-      if (Math.abs(delta) < 0.00005) {
-        smoothProgress = rawProgress;
-      } else {
-        smoothProgress += delta * SCROLL_LERP;
-      }
+      // 1. Update Lenis & get smooth scroll progress
+      lenis.raf(time);
+      smoothProgress = lenis.progress;
 
       // 2. Draw frame
       drawBlendedFrame(smoothProgress * (TOTAL_FRAMES - 1));
@@ -414,7 +410,6 @@
 
       await preloadFrames();
       ready = true;
-      smoothProgress = getRawProgress();
       resizeCanvas();
       drawBlendedFrame(0);
       updateTargets(0);
